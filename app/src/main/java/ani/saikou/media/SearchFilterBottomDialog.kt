@@ -45,6 +45,7 @@ class SearchFilterBottomDialog(
             activity.result.apply {
                 format = binding.searchFormat.text.toString().ifBlank { null }
                 sort = binding.searchSortBy.text.toString().ifBlank { null }
+                    ?.let { Anilist.sortBy[resources.getStringArray(R.array.sort_by).indexOf(it)] }
                 season = binding.searchSeason.text.toString().ifBlank { null }
                 seasonYear = binding.searchYear.text.toString().toIntOrNull()
                 genres = selectedGenres
@@ -60,12 +61,14 @@ class SearchFilterBottomDialog(
             dismiss()
         }
 
-        binding.searchSortBy.setText(activity.result.sort)
+        binding.searchSortBy.setText(activity.result.sort?.let {
+            resources.getStringArray(R.array.sort_by)[Anilist.sortBy.indexOf(it)]
+        })
         binding.searchSortBy.setAdapter(
             ArrayAdapter(
                 binding.root.context,
                 R.layout.item_dropdown,
-                Anilist.sortBy.keys.toTypedArray()
+                resources.getStringArray(R.array.sort_by)
             )
         )
 
